@@ -11,7 +11,7 @@ Directory.CreateDirectory("./config");
 
 
 string ldapPath;
-string description;
+string description; // описание
 string ouForDesmissed;
 string primaryGroupID;
 string groupLdapPath;
@@ -20,9 +20,9 @@ string groupLdapPath;
 Dictionary<string, string> userData = new Dictionary<string, string>
 {
     { "cn", "" },
-    { "accountExpires", "" },
-    { "distinguishedName", "" },
-    { "description", "" },
+    { "accountExpires", "" }, // дата и время истечения учетки
+    { "distinguishedName", "" }, // уникальный «полный адрес» объекта в каталоге LDAP
+    { "description", "" }, // описание
     { "telephoneNumber", "" },
     { "wWWHomePage", "" },
     { "mail", "" },
@@ -56,7 +56,7 @@ for (int i = 0; i < allLoginAdList.Count; i++)
 
 for (int i = 0; i < userDataList.Count; i++)
 {
-    Dictionary<string, string> userDataSearch = GetAdUserAtributs(ldapPath, userDataList[i]["sAMAccountName"]);
+    Dictionary<string, string> userDataSearch = GetUserAtributs(ldapPath, userDataList[i]["sAMAccountName"]);
 
     userDataList[i]["cn"] = userDataSearch["cn"];
     userDataList[i]["accountExpires"] = userDataSearch["accountExpires"];

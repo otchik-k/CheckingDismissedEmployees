@@ -74,7 +74,7 @@ public class Functions
     }
 
 
-    public static Dictionary<string, string> GetAdUserAtributs(string ldapPath, string login)
+    public static Dictionary<string, string> GetUserAtributs(string ldapPath, string login)
     {
         Dictionary<string, string> resultDict = new Dictionary<string, string>
         {
