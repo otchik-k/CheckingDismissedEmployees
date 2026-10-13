@@ -2,3 +2,6 @@
 **/Release/
 **/publish/
 .obsidian/
+**/obj/
+**/Properties/
+.vs/
