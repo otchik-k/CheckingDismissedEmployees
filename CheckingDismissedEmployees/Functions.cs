@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
 using System.DirectoryServices;
-using System.DirectoryServices.AccountManagement;
-using System.DirectoryServices.ActiveDirectory;
-using System.Text;
-using System.Threading.Tasks;
+//using System.DirectoryServices.AccountManagement;
+//using System.DirectoryServices.ActiveDirectory;
+//using System.Text;
+//using System.Threading.Tasks;
 
 public class Functions
 {
@@ -124,6 +124,39 @@ public class Functions
             }
         }
         return resultDict;
+    }
+
+
+    public static int GetUserAccountControl(string ldapPath, string login)
+    {
+        using (DirectoryEntry root = new DirectoryEntry("LDAP://" + ldapPath))
+        using (DirectorySearcher searcher = new DirectorySearcher(root))
+        {
+            searcher.Filter = $"(sAMAccountName={login})";
+
+            searcher.PropertiesToLoad.Add("userAccountControl");
+
+            SearchResult result = searcher.FindOne();
+
+            if (result != null)
+            {
+                if (result.Properties.Contains("userAccountControl") &&
+                    result.Properties["userAccountControl"].Count > 0)
+                {
+                    return Convert.ToInt32(result.Properties["userAccountControl"][0]);
+                }
+                else
+                {
+                    return 512;
+                }
+            }
+            else
+            {
+                // Пользователь с таким логином не найден
+                UsingStreamWriter("Пользователь " + login + " не найден.");
+                return -1;
+            }
+        }
     }
 
 
