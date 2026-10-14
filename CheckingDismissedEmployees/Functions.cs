@@ -10,6 +10,8 @@ using System.DirectoryServices;
 public class Functions
 {
     public static string logName = "log\\log - " + DateTime.Now.ToString("dd.MM.yyyy HH.mm.ss") + ".txt";
+
+
     public static void UsingStreamWriter(string anyString)
     {
         using (StreamWriter logWriter = new StreamWriter(logName, true))
@@ -203,6 +205,34 @@ public class Functions
         {
             UsingStreamWriter($"Ошибка при обновлении атрибута: {ex.Message}");
         }
+    }
+
+
+    public static void UpdateUserAccountControl(string userSamAccountName, int currentUserAccountControl, int newUserAccountControl, string ldapPath, string distinguishedName)
+    {
+        if ((currentUserAccountControl & 2) == 2)
+        {
+            UsingStreamWriter($"Пользователь {userSamAccountName} уже заблокирован");
+        }
+        else
+        {
+            try
+            {
+                using (DirectoryEntry root = new DirectoryEntry($"LDAP://{ldapPath}"))
+                {
+                    using (DirectoryEntry user = new DirectoryEntry($"LDAP://{distinguishedName}"))
+                    {
+                        user.Properties["userAccountControl"].Value = currentUserAccountControl | newUserAccountControl;
+                        user.CommitChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                UsingStreamWriter($"ОШИБКА при блокировке пользователя {userSamAccountName}: {ex.Message}");
+            }
+        }
+        
     }
 
 
