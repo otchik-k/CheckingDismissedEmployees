@@ -94,6 +94,7 @@ for (int i = 0; i < userDataList.Count; i++)
         UpdateUserAttribute(userDataList[i]["sAMAccountName"], "primaryGroupID", intPrimaryGroupID, ldapPath, userDataList[i]["distinguishedName"]);
         RemoveUserFromAllGroupsExceptPrimary(userDataList[i]["sAMAccountName"], primaryGroupID, intPrimaryGroupID, userDataList[i]["distinguishedName"]);
         MoveUserToOU(userDataList[i]["sAMAccountName"], ouForDesmissed, ldapPath, userDataList[i]["distinguishedName"]);
+        UpdateUserAccountControl(userDataList[i]["sAMAccountName"], GetUserAccountControl(ldapPath, userDataList[i]["sAMAccountName"]), 2, ldapPath, userDataList[i]["distinguishedName"]);
     }
 }
 
