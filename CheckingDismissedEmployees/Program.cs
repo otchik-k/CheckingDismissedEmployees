@@ -73,7 +73,6 @@ if (File.Exists("./config/config.json"))
 
     }
 
-
     UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + " ищем уволенных");
 
     DateTimeOffset nowOffset = DateTimeOffset.UtcNow;
@@ -106,7 +105,7 @@ if (File.Exists("./config/config.json"))
 else
 {
     CreateConfigFile("./config", "config.json");
-    UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + "Необходимо заполнить конфигурационный файл ./config/config.json");
+    UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + " Необходимо заполнить конфигурационный файл ./config/config.json");
     Environment.Exit(1);
 }
 

@@ -262,11 +262,11 @@ public class Functions
         }
         catch (System.Runtime.InteropServices.COMException comEx) when (comEx.ErrorCode == -2147016653)
         {
-            UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + $"Предупреждение: Пользователь {userSamAccountName} уже состоит в группе");
+            UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + $" Предупреждение: Пользователь {userSamAccountName} уже состоит в группе");
         }
         catch (Exception ex)
         {
-            UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + $"Ошибка при добавлении пользователя {userSamAccountName} в группу: {ex.Message}");
+            UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + $" Ошибка при добавлении пользователя {userSamAccountName} в группу: {ex.Message}");
             throw;
         }
     }
@@ -338,7 +338,7 @@ public class Functions
         {
             if (string.IsNullOrEmpty(configuration[key]))
             {
-                UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + $"ОШИБКА! Отсутствует параметр {key}");
+                UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + $" ОШИБКА! Отсутствует параметр {key}");
                 count--;
             }
         }
