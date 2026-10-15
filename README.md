@@ -36,11 +36,12 @@
 
 ## Пример заполнение config.json:
 
-`{`  
-	  `"ActiveDirectory": {`  
-	    `"ldapPath":"OU=Example,DC=youdomain,DC=local", # Место в AD, где скрипт будет искать уволенных сотрудников`  
-	    `"ouForDesmissed":"OU=Уволенные,DC=sstkvik,DC=local", # OU в которую будут перемещены учетные записи с истекшим сроком годности`  
-	    `"primaryGroupID":"6154", # ID группы, которая будет назначена учетной записи как основная, после удаления рабочих групп доступа`  
-	    `"distinguishedName":"CN=Dismissed,OU=Dismissed,DC=youdomain,DC=local" # Группа, которая будет указана как основная`  
-	  `}`  
-`}`  
+```jsonc
+{
+  "ActiveDirectory": {
+    "ldapPath": "OU=Example,DC=youdomain,DC=local", // Место в AD, где скрипт будет искать уволенных сотрудников  
+    "ouForDesmissed": "OU=Уволенные,DC=sstkvik,DC=local", // OU, в которую будут перемещены учетные записи с истекшим сроком годности  
+    "primaryGroupID": "6154", // ID группы, которая будет назначена учетной записи как основная, после удаления рабочих групп доступа  
+    "distinguishedName": "CN=Dismissed,OU=Dismissed,DC=youdomain,DC=local" // Группа, которая будет указана как основная  
+  }
+}
