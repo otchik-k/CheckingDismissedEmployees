@@ -3,6 +3,9 @@
 ## Зависимости:
 
 `system.directoryservices.accountmanagement`
+`microsoft.extensions.configuration`
+`microsoft.extensions.configuration.fileextensions`
+`microsoft.extensions.configuration.json`
 ## Алгоритм действия скрипта:
 1. При первом запуске создает папки *"log"* и *"config"* в директории,, откуда запущен.
 2. Создает в папке *"config"* файл *"Config.txt"* с пустыми значениями и прекращает работу. (еще не реализовано, сейчас падает с ошибкой)
