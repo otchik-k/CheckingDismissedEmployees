@@ -1,11 +1,15 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
+﻿using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
 using System.DirectoryServices;
-//using System.DirectoryServices.AccountManagement;
-//using System.DirectoryServices.ActiveDirectory;
-//using System.Text;
-//using System.Threading.Tasks;
+using System.DirectoryServices.AccountManagement;
+using System.DirectoryServices.ActiveDirectory;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security.Authentication.ExtendedProtection;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 public class Functions
 {
@@ -68,7 +72,7 @@ public class Functions
             }
             catch (Exception ex)
             {
-                UsingStreamWriter(ex.Message);
+                UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + ex.Message);
                 return null;
             }
 
@@ -122,7 +126,7 @@ public class Functions
             }
             else
             {
-                UsingStreamWriter("Пользователь" + login + " не найден.");
+                UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + "Пользователь" + login + " не найден.");
             }
         }
         return resultDict;
@@ -155,7 +159,7 @@ public class Functions
             else
             {
                 // Пользователь с таким логином не найден
-                UsingStreamWriter("Пользователь " + login + " не найден.");
+                UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + "Пользователь " + login + " не найден.");
                 return -1;
             }
         }
@@ -180,7 +184,7 @@ public class Functions
         }
         catch (Exception ex)
         {
-            UsingStreamWriter($"Ошибка: {ex.Message}");
+            UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + $"Ошибка: {ex.Message}");
         }
     }
 
@@ -203,7 +207,7 @@ public class Functions
         }
         catch (Exception ex)
         {
-            UsingStreamWriter($"Ошибка при обновлении атрибута: {ex.Message}");
+            UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + $"Ошибка при обновлении атрибута: {ex.Message}");
         }
     }
 
@@ -212,7 +216,7 @@ public class Functions
     {
         if ((currentUserAccountControl & 2) == 2)
         {
-            UsingStreamWriter($"Пользователь {userSamAccountName} уже заблокирован");
+            UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + $"Пользователь {userSamAccountName} уже заблокирован");
         }
         else
         {
@@ -229,7 +233,7 @@ public class Functions
             }
             catch (Exception ex)
             {
-                UsingStreamWriter($"ОШИБКА при блокировке пользователя {userSamAccountName}: {ex.Message}");
+                UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + $"ОШИБКА при блокировке пользователя {userSamAccountName}: {ex.Message}");
             }
         }
         
@@ -258,11 +262,11 @@ public class Functions
         }
         catch (System.Runtime.InteropServices.COMException comEx) when (comEx.ErrorCode == -2147016653)
         {
-            UsingStreamWriter($"Предупреждение: Пользователь {userSamAccountName} уже состоит в группе");
+            UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + $"Предупреждение: Пользователь {userSamAccountName} уже состоит в группе");
         }
         catch (Exception ex)
         {
-            UsingStreamWriter($"Ошибка при добавлении пользователя {userSamAccountName} в группу: {ex.Message}");
+            UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + $"Ошибка при добавлении пользователя {userSamAccountName} в группу: {ex.Message}");
             throw;
         }
     }
@@ -309,20 +313,66 @@ public class Functions
                     }
                     catch (Exception ex)
                     {
-                        UsingStreamWriter($"⚠️ Не удалось удалить {userSamAccountName} из группы {groupDn}: {ex.Message}");
+                        UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + $" Не удалось удалить {userSamAccountName} из группы {groupDn}: {ex.Message}");
                         // Продолжаем обработку остальных групп
                     }
                 }
 
-                UsingStreamWriter($"{DateTime.Now:HH.mm.ss} ✅ {userSamAccountName} (primaryGroupId: {primaryGroupId}) " +
+                UsingStreamWriter($"{DateTime.Now:HH.mm.ss} {userSamAccountName} (primaryGroupId: {primaryGroupId}) " +
                     $"удалён из {removedCount} групп. Основная группа: {primaryGroupDistinguishedName ?? "не указана"}");
             }
         }
         catch (Exception ex)
         {
-            UsingStreamWriter($"❌ Ошибка при очистке групп для {userSamAccountName}: {ex.Message}");
+            UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + $" Ошибка при очистке групп для {userSamAccountName}: {ex.Message}");
             throw;
         }
+    }
+
+
+    public static bool ValidateConfig(IConfigurationRoot configuration, string[] requiredKeys)
+    {
+        int count = requiredKeys.Length;
+
+        foreach (var key in requiredKeys)
+        {
+            if (string.IsNullOrEmpty(configuration[key]))
+            {
+                UsingStreamWriter(DateTime.Now.ToString("HH.mm.ss") + $"ОШИБКА! Отсутствует параметр {key}");
+                count--;
+            }
+        }
+        if (count < requiredKeys.Length)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+
+    public static void CreateConfigFile(string filePath, string fileName)
+    {
+        var config = new
+        {
+            ActiveDirectory = new
+            {
+                ldapPath = "DC=youdomain, DC=local",
+                ouForDesmissed = "OU=youOU, DC=youdomain, DC=local",
+                primaryGroupID = "6154 example",
+                distinguishedName = "CN=youCN, OU=youOU, DC=youdomain, DC=local"
+            }
+        };
+
+        var options = new JsonSerializerOptions
+        {
+            WriteIndented = true
+        };
+
+        string jsonString = JsonSerializer.Serialize(config, options);
+        File.WriteAllText($"{filePath}\\{fileName}", jsonString, System.Text.Encoding.UTF8);
     }
 }
 
