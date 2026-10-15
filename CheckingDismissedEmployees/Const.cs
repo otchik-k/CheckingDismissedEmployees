@@ -8,4 +8,12 @@ public class Const
 {
     public const string configFilelway = "config\\Config.txt";
 
+    public static readonly string[] requiredKeys =
+        {
+        "ActiveDirectory:ldapPath",
+        "ActiveDirectory:ouForDesmissed",
+        "ActiveDirectory:primaryGroupID",
+        "ActiveDirectory:distinguishedName"
+        };
+
 }
