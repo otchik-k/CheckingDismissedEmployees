@@ -92,6 +92,7 @@ if (File.Exists("./config/config.json"))
             UpdateUserAttribute(userDataList[i]["sAMAccountName"], "homePhone", userDataList[i]["telephoneNumber"], ldapPath, userDataList[i]["distinguishedName"]);
             UpdateUserAttribute(userDataList[i]["sAMAccountName"], "mail", null, ldapPath, userDataList[i]["distinguishedName"]);
             UpdateUserAttribute(userDataList[i]["sAMAccountName"], "telephoneNumber", null, ldapPath, userDataList[i]["distinguishedName"]);
+            UpdateUserAttribute(userDataList[i]["sAMAccountName"], "description", $"Перемещен в уволенные {DateTime.Now.ToString("dd.MM.yyyy HH.mm")}", ldapPath, userDataList[i]["distinguishedName"]);
             AddUserToGroup(userDataList[i]["sAMAccountName"], userDataList[i]["distinguishedName"], groupLdapPath, ldapPath);
             int intPrimaryGroupID = int.Parse(primaryGroupID);
             UpdateUserAttribute(userDataList[i]["sAMAccountName"], "primaryGroupID", intPrimaryGroupID, ldapPath, userDataList[i]["distinguishedName"]);
