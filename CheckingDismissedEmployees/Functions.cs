@@ -300,6 +300,7 @@ public class Functions
                         {
                             if (group.Properties["member"].Contains(userDistinguishedName))
                             {
+                                UsingStreamWriter($"{DateTime.Now:HH.mm.ss} пользователь удален из группы {groupDn}");
                                 group.Properties["member"].Remove(userDistinguishedName);
                                 group.CommitChanges();
                                 removedCount++;
